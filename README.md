@@ -1,8 +1,8 @@
 # BrannBagFilter
 
-**Originaltaschen-Ersatz mit virtuellen Filtergruppen für World of Warcraft (Retail)**
+**Native bag replacement with virtual filter groups for World of Warcraft (Retail)**
 
-BrannBagFilter ersetzt sämtliche nativen Taschenfenster durch ein einziges, konfigurierbares Master-Bag. Über selbst erstellte Filterregeln werden Items automatisch in virtuelle Gruppen sortiert – so behältst du immer den Überblick.
+BrannBagFilter replaces all native bag windows with a single, fully configurable master bag. Create custom filter rules to automatically sort your items into virtual groups — never lose track of your inventory again.
 
 ![Version](https://img.shields.io/badge/Version-2.0.0-blue)
 ![WoW](https://img.shields.io/badge/WoW-Retail%2012.0.1+-orange)
@@ -11,102 +11,102 @@ BrannBagFilter ersetzt sämtliche nativen Taschenfenster durch ein einziges, kon
 
 ## Features
 
-### Virtuelle Taschen & Filtergruppen
-- Erstelle beliebig viele **virtuelle Gruppen** mit eigenem Namen und Icon
-- **15 Filterfelder** kombinierbar mit AND / OR und per-Regel NOT-Invertierung:
+### Virtual Bags & Filter Groups
+- Create any number of **virtual groups** with custom names and icons
+- **15 filter fields** combinable with AND / OR and per-rule NOT inversion:
 
-| Feld | Beschreibung |
-|------|-------------|
-| Itemname | Freitext-Suche (Teilstring) |
-| Qualität (exakt / min / max) | Poor bis Heirloom (0–7) |
-| Item-Level (min / max) | Numerischer Vergleich |
-| Ausrüstbar | Ja / Nein |
-| Slot | Kopf, Brust, Ring, Schmuckstück, … |
-| Typ / Klasse | Freitext auf WoW-Itemtyp |
-| Bindung | Seelengebunden / BoE / Kriegsbeute / Nicht gebunden |
-| Housing-Item | Möbel & Einrichtung |
-| Im Gear-Loadout | Beliebiges Set / bestimmtes Set / kein Set |
-| Erweiterung | Classic bis Midnight |
-| Ist Item-Upgrade | Vergleich mit angelegtem Gear |
-| Bereits gefiltert | Item wurde schon von einer vorherigen Gruppe erfasst |
+| Field | Description |
+|-------|-------------|
+| Item Name | Free-text search (substring match) |
+| Quality (exact / min / max) | Poor through Heirloom (0–7) |
+| Item Level (min / max) | Numeric comparison |
+| Equipable | Yes / No |
+| Slot | Head, Chest, Ring, Trinket, … |
+| Type / Class | Free-text match on WoW item type |
+| Bind Type | Soulbound / BoE / Warband / Not bound |
+| Housing Item | Furniture & decoration |
+| In Gear Loadout | Any set / specific set / no set |
+| Expansion | Classic through Midnight |
+| Is Item Upgrade | Comparison with currently equipped gear |
+| Already Filtered | Item was already matched by a previous group |
 
-- **Exklusive Gruppen** – Items erscheinen nur in der exklusiven Gruppe, nicht doppelt
-- **„Sonstige"-Sektion** – automatischer Auffangbereich für ungefilterte Items
+- **Exclusive groups** — items only appear in the exclusive group, preventing duplicates
+- **"Other" section** — automatic catch-all for unfiltered items
 
-### Reagenzientasche
-- Eigenes Fenster mit **unabhängigen Filtergruppen** für den Reagentbag (Bag 5)
-- Aufklappbar über Toggle-Button am Master-Bag
+### Reagent Bag
+- Separate window with **independent filter groups** for the reagent bag (Bag 5)
+- Toggleable via button on the master bag
 
-### Verkaufen beim Händler
-- Jede Filtergruppe zeigt beim Händler einen **Verkaufen-Button** (Münz-Icon)
-- Es werden nur die Items verkauft, die in der jeweiligen Gruppe **tatsächlich sichtbar** sind
+### Sell at Merchant
+- Each filter group shows a **sell button** (coin icon) when at a merchant
+- Only items that are **actually visible** in the group will be sold
 
-### UI & Bedienung
-- **Drag & Drop** zum Umsortieren von Filtergruppen
-- **Icon-Picker** mit vollständiger Macro-Icon-Bibliothek und Suche
-- **Integrierte Suchleiste** – filtert nach Name, Typ und Subtyp
-- **Item-Level-Anzeige** auf Ausrüstungsgegenständen mit Qualitätsfarbe
-- **Qualitäts-Rahmen** in der jeweiligen Seltenheitsfarbe
-- **Vergleichs-Tooltips** beim Hovern über Gear
-- **Freie-Plätze-Anzeige** (optional pro physischer Tasche)
-- **Sortier-Button** für `C_Container.SortBags()`
-- **Spaltenanzahl anpassbar** (1–10) über Resize-Handle
-- **Transparenz-Slider** in den Einstellungen
-- **Shift+Klick** fügt Itemlink in den Chat ein
-- **Verschiebbare Fenster** mit gespeicherter Position
+### UI & Interaction
+- **Drag & drop** to reorder filter groups
+- **Icon picker** with full macro icon library and search
+- **Integrated search bar** — filters by name, type, and subtype
+- **Item level display** on equipment with quality-colored text
+- **Quality borders** in the corresponding rarity color
+- **Comparison tooltips** when hovering over gear
+- **Free slots display** (optionally per physical bag)
+- **Sort button** using `C_Container.SortBags()`
+- **Adjustable column count** (1–10) via resize handle
+- **Opacity slider** in settings
+- **Shift+Click** inserts item link into chat
+- **Movable windows** with saved positions
 
-### Keybinding & Slash-Commands
-- Eigene Tastenbelegung über WoW-Keybinding-Menü (`BrannBagFilter – Taschen umschalten`)
-- Überschreibt native Bag-Keybinds (Rucksack, Tasche 1–4, Reagenzien)
-- `/bbf reset` – Einstellungen zurücksetzen und UI neu laden
+### Keybindings & Slash Commands
+- Custom keybinding via WoW keybinding menu (`BrannBagFilter – Toggle Bags`)
+- Overrides native bag keybinds (Backpack, Bags 1–4, Reagent Bag)
+- `/bbf reset` — reset settings and reload UI
 
 ---
 
 ## Installation
 
-1. Lade das AddOn herunter oder klone das Repository:
+1. Download the addon or clone the repository:
    ```
    git clone https://github.com/Dakri/BrannBagFilter.git
    ```
-2. Kopiere den Ordner `BrannBagFilter` nach:
+2. Copy the `BrannBagFilter` folder to:
    ```
    World of Warcraft/_retail_/Interface/AddOns/
    ```
-3. Starte WoW (neu) und aktiviere das AddOn in der AddOn-Liste.
+3. Restart WoW (or reload) and enable the addon in the addon list.
 
 ---
 
-## Konfiguration
+## Configuration
 
-Öffne die Einstellungen über das **Zahnrad-Icon** in der Titelleiste des Master-Bags.
+Open settings via the **gear icon** in the master bag title bar.
 
-**Tab „Einstellungen":**
-- Transparenz
-- Suchleiste ein/aus
-- „Sonstige"-Gruppe ein/aus
-- Freie Plätze pro Tasche ein/aus
+**Settings tab:**
+- Opacity
+- Search bar on/off
+- "Other" group on/off
+- Free slots per bag on/off
 
-**Tab „Filter":**
-- Filtergruppen erstellen, bearbeiten, löschen und per Drag & Drop sortieren
-- Getrennte Listen für Haupttasche und Reagenzientasche
-- Regel-Editor mit Spaltenüberschriften und AND/OR/NOT-Logik
+**Filters tab:**
+- Create, edit, delete, and drag & drop reorder filter groups
+- Separate lists for main bags and reagent bag
+- Rule editor with column headers and AND/OR/NOT logic
 
 ---
 
-## Dateistruktur
+## File Structure
 
 ```
 BrannBagFilter/
-├── BrannBagFilter.toc   -- AddOn-Manifest
-├── Bindings.xml          -- Keybinding-Definition
-├── Core.lua              -- Initialisierung, Events, Hilfsfunktionen
-├── Filtering.lua         -- Regel-Engine & Item-Matching
-├── FilterSettings.lua    -- Einstellungs-UI & Regel-Editor
-└── UI.lua                -- Master-Bag-Frame, Rendering, Interaktion
+├── BrannBagFilter.toc   -- Addon manifest
+├── Bindings.xml          -- Keybinding definitions
+├── Core.lua              -- Initialization, events, utility functions
+├── Filtering.lua         -- Rule engine & item matching
+├── FilterSettings.lua    -- Settings UI & rule editor
+└── UI.lua                -- Master bag frame, rendering, interaction
 ```
 
 ---
 
-## Lizenz
+## License
 
-Dieses Projekt ist frei nutzbar. Kein offizielles Blizzard-Produkt.
+This project is free to use. Not an official Blizzard product.
