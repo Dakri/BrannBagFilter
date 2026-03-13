@@ -1,0 +1,5 @@
+<Bindings>
+ <Binding name="BRANNBAGFILTER_TOGGLEBAGS" category="BrannBagFilter">
+  BrannBagFilter_ToggleBags()
+ </Binding>
+</Bindings>

@@ -1,0 +1,13 @@
+## Interface: 120001
+## Title: |cff00ccffBrann|r|cffffffffBagFilter|r
+## Notes: Original Bag Helper - Virtual Bags with Filters
+## Author: BrannPack Team
+## Version: 2.0.0
+## Category: Brann Pack
+## SavedVariables: BrannBagFilterDB
+
+# Core
+Core.lua
+Filtering.lua
+FilterSettings.lua
+UI.lua
