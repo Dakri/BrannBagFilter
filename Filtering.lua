@@ -1,17 +1,17 @@
-local _, BrannBagFilter = ...
+﻿local _, BrannFilterBag = ...
 
 -------------------------------------------------------------------------------
--- BrannBagFilter – Filtering
+-- BrannFilterBag – Filtering
 -- Strukturiertes Regel-Evaluierungs-System
 -- Jede Regel: { field, op, value }
 -- op: "AND" | "OR" | "NOT"
 -------------------------------------------------------------------------------
 
-BrannBagFilter.Filtering = {}
-local F = BrannBagFilter.Filtering
+BrannFilterBag.Filtering = {}
+local F = BrannFilterBag.Filtering
 
 -- Spaltennamen für Quality
-BrannBagFilter.QualityNames = {
+BrannFilterBag.QualityNames = {
     [0] = "poor",       -- Grau / Wertlos
     [1] = "common",     -- Weiß / Gewöhnlich
     [2] = "uncommon",   -- Grün / Ungewöhnlich
@@ -23,7 +23,7 @@ BrannBagFilter.QualityNames = {
 }
 
 -- Locale-Qualitätsnamen aus WoW-Strings
-BrannBagFilter.QualityLabels = {
+BrannFilterBag.QualityLabels = {
     [0] = ITEM_QUALITY0_DESC or "Wertlos",
     [1] = ITEM_QUALITY1_DESC or "Gewöhnlich",
     [2] = ITEM_QUALITY2_DESC or "Ungewöhnlich",
@@ -35,7 +35,7 @@ BrannBagFilter.QualityLabels = {
 }
 
 -- Equipslot-Anzeigenamen
-BrannBagFilter.SlotLabels = {
+BrannFilterBag.SlotLabels = {
     INVTYPE_HEAD         = "Kopf",
     INVTYPE_NECK         = "Hals",
     INVTYPE_SHOULDER     = "Schultern",
@@ -108,13 +108,13 @@ local function CheckRule(rule, item, bindCache)
         -- value = "soulbound" | "boe" | "warband" | "none"
         local bt = bindCache[item.bag .. "_" .. item.slot]
         if not bt then
-            bt = BrannBagFilter:GetBindTypeFromScan(item.bag, item.slot)
+            bt = BrannFilterBag:GetBindTypeFromScan(item.bag, item.slot)
             bindCache[item.bag .. "_" .. item.slot] = bt
         end
         return bt == value
 
     elseif field == "housing" then
-        local result = BrannBagFilter:IsHousingItem(item.itemSubType, item.itemType, item.classID, item.subClassID)
+        local result = BrannFilterBag:IsHousingItem(item.itemSubType, item.itemType, item.classID, item.subClassID)
         if rule.value == false then return not result end
         return result
 
@@ -122,12 +122,12 @@ local function CheckRule(rule, item, bindCache)
         -- rule.value: false/"false" = in keinem Set, "any" = beliebiges Set, <number> = spezifisches Set
         if rule.value == false or rule.value == "false" then
             -- "In keinem Set" → true wenn NICHT in irgendeinem Set
-            return not BrannBagFilter:IsInGearLoadout(item.bag, item.slot, "any")
+            return not BrannFilterBag:IsInGearLoadout(item.bag, item.slot, "any")
         elseif rule.value == "any" or rule.value == true or rule.value == "true" then
-            return BrannBagFilter:IsInGearLoadout(item.bag, item.slot, "any")
+            return BrannFilterBag:IsInGearLoadout(item.bag, item.slot, "any")
         else
             -- Spezifisches Set (numerische ID)
-            return BrannBagFilter:IsInGearLoadout(item.bag, item.slot, rule.value)
+            return BrannFilterBag:IsInGearLoadout(item.bag, item.slot, rule.value)
         end
 
     elseif field == "already_filtered" then

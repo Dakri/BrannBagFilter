@@ -1,13 +1,13 @@
-local AddonName, BrannBagFilter = ...
+﻿local AddonName, BrannFilterBag = ...
 
 -------------------------------------------------------------------------------
--- BrannBagFilter – Core
+-- BrannFilterBag – Core
 -------------------------------------------------------------------------------
 
-_G["BrannBagFilter"] = BrannBagFilter
-BrannBagFilter.VERSION = "2.0.0"
+_G["BrannFilterBag"] = BrannFilterBag
+BrannFilterBag.VERSION = "2.0.0"
 
-BrannBagFilter.Defaults = {
+BrannFilterBag.Defaults = {
     virtualBags = {},
     reagentBags = {},
     nextID      = 1,
@@ -19,14 +19,14 @@ BrannBagFilter.Defaults = {
 }
 
 -- Bind-Type Erkennung via Hidden Tooltip
-local scanTT = CreateFrame("GameTooltip", "BrannBagFilter_ScanTT", nil, "GameTooltipTemplate")
+local scanTT = CreateFrame("GameTooltip", "BrannFilterBag_ScanTT", nil, "GameTooltipTemplate")
 scanTT:SetOwner(WorldFrame, "ANCHOR_NONE")
 
-function BrannBagFilter:GetBindTypeFromScan(bag, slot)
+function BrannFilterBag:GetBindTypeFromScan(bag, slot)
     scanTT:ClearLines()
     scanTT:SetBagItem(bag, slot)
     for i = 2, scanTT:NumLines() do
-        local left = _G["BrannBagFilter_ScanTTTextLeft" .. i]
+        local left = _G["BrannFilterBag_ScanTTTextLeft" .. i]
         if left then
             local t = left:GetText() or ""
             if t:find("Seelenge") or t:find("Soulbound") or t:find("Soul-bound") then return "soulbound" end
@@ -41,7 +41,7 @@ function BrannBagFilter:GetBindTypeFromScan(bag, slot)
     return "none"
 end
 
-function BrannBagFilter:IsHousingItem(itemSubType, itemType, classID, subClassID)
+function BrannFilterBag:IsHousingItem(itemSubType, itemType, classID, subClassID)
     -- Methode 1: classID/subClassID (zuverlässigster Weg)
     -- Housing Items in TWW: classID 19 (Professional), diverse subClassIDs
     -- Oder: classID 17 (Miscellaneous), subClassID für Housing
@@ -104,7 +104,7 @@ local function UnpackEquipLocation(location)
     return nil, nil
 end
 
-function BrannBagFilter:IsInGearLoadout(bag, slot, targetSet)
+function BrannFilterBag:IsInGearLoadout(bag, slot, targetSet)
     local function CheckSet(setID)
         local locations = C_EquipmentSet.GetItemLocations(setID)
         if not locations then return false end
@@ -136,17 +136,17 @@ function BrannBagFilter:IsInGearLoadout(bag, slot, targetSet)
     return false
 end
 
-function BrannBagFilter:NewID()
+function BrannFilterBag:NewID()
     local id = self.db.nextID
     self.db.nextID = id + 1
     return id
 end
 
-function BrannBagFilter:Print(msg)
-    print("|cff00ccff[BrannBagFilter]|r " .. tostring(msg))
+function BrannFilterBag:Print(msg)
+    print("|cff00ccff[Brann FilterBag]|r " .. tostring(msg))
 end
 
-function BrannBagFilter:DeepCopy(orig)
+function BrannFilterBag:DeepCopy(orig)
     local copy = {}
     for k, v in pairs(orig) do
         copy[k] = type(v) == "table" and self:DeepCopy(v) or v
@@ -162,33 +162,33 @@ eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("PLAYER_LOGIN")
 eventFrame:SetScript("OnEvent", function(self, event, arg1)
     if event == "ADDON_LOADED" and arg1 == AddonName then
-        if not BrannBagFilterDB then
-            BrannBagFilterDB = BrannBagFilter:DeepCopy(BrannBagFilter.Defaults)
+        if not BrannFilterBagDB then
+            BrannFilterBagDB = BrannFilterBag:DeepCopy(BrannFilterBag.Defaults)
         end
-        for k, v in pairs(BrannBagFilter.Defaults) do
-            if BrannBagFilterDB[k] == nil then
-                BrannBagFilterDB[k] = BrannBagFilter:DeepCopy(v)
+        for k, v in pairs(BrannFilterBag.Defaults) do
+            if BrannFilterBagDB[k] == nil then
+                BrannFilterBagDB[k] = BrannFilterBag:DeepCopy(v)
             end
         end
-        BrannBagFilter.db = BrannBagFilterDB
-        BrannBagFilter:Print("v" .. BrannBagFilter.VERSION .. " geladen.")
+        BrannFilterBag.db = BrannFilterBagDB
+        BrannFilterBag:Print("v" .. BrannFilterBag.VERSION .. " geladen.")
         self:UnregisterEvent("ADDON_LOADED")
     elseif event == "PLAYER_LOGIN" then
-        if BrannBagFilter.UI then BrannBagFilter.UI:Initialize() end
+        if BrannFilterBag.UI then BrannFilterBag.UI:Initialize() end
     end
 end)
 
 -------------------------------------------------------------------------------
 -- Slash Commands
 -------------------------------------------------------------------------------
-SlashCmdList["BRANNBAGFILTER"] = function(msg)
+SlashCmdList["BRANNFILTERBAG"] = function(msg)
     msg = (msg or ""):trim():lower()
     if msg == "reset" then
-        BrannBagFilterDB = nil
+        BrannFilterBagDB = nil
         ReloadUI()
     else
-        BrannBagFilter:Print("Befehle: /bbf reset")
+        BrannFilterBag:Print("Befehle: /bbf reset")
     end
 end
-SLASH_BRANNBAGFILTER1 = "/bbf"
-SLASH_BRANNBAGFILTER2 = "/brannbag"
+SLASH_BRANNFILTERBAG1 = "/bbf"
+SLASH_BRANNFILTERBAG2 = "/bfb"

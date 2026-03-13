@@ -1,8 +1,8 @@
-# BrannBagFilter
+﻿# BrannFilterBag
 
 **Native bag replacement with virtual filter groups for World of Warcraft (Retail)**
 
-BrannBagFilter replaces all native bag windows with a single, fully configurable master bag. Create custom filter rules to automatically sort your items into virtual groups — never lose track of your inventory again.
+BrannFilterBag replaces all native bag windows with a single, fully configurable master bag. Create custom filter rules to automatically sort your items into virtual groups — never lose track of your inventory again.
 
 ![Version](https://img.shields.io/badge/Version-2.0.0-blue)
 ![WoW](https://img.shields.io/badge/WoW-Retail%2012.0.1+-orange)
@@ -56,7 +56,7 @@ BrannBagFilter replaces all native bag windows with a single, fully configurable
 - **Movable windows** with saved positions
 
 ### Keybindings & Slash Commands
-- Custom keybinding via WoW keybinding menu (`BrannBagFilter – Toggle Bags`)
+- Custom keybinding via WoW keybinding menu (`BrannFilterBag – Toggle Bags`)
 - Overrides native bag keybinds (Backpack, Bags 1–4, Reagent Bag)
 - `/bbf reset` — reset settings and reload UI
 
@@ -66,9 +66,9 @@ BrannBagFilter replaces all native bag windows with a single, fully configurable
 
 1. Download the addon or clone the repository:
    ```
-   git clone https://github.com/Dakri/BrannBagFilter.git
+   git clone https://github.com/Dakri/BrannFilterBag.git
    ```
-2. Copy the `BrannBagFilter` folder to:
+2. Copy the `BrannFilterBag` folder to:
    ```
    World of Warcraft/_retail_/Interface/AddOns/
    ```
@@ -96,8 +96,8 @@ Open settings via the **gear icon** in the master bag title bar.
 ## File Structure
 
 ```
-BrannBagFilter/
-├── BrannBagFilter.toc   -- Addon manifest
+BrannFilterBag/
+├── BrannFilterBag.toc   -- Addon manifest
 ├── Bindings.xml          -- Keybinding definitions
 ├── Core.lua              -- Initialization, events, utility functions
 ├── Filtering.lua         -- Rule engine & item matching

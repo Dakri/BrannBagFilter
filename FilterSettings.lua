@@ -1,13 +1,13 @@
-local _, BrannBagFilter = ...
+﻿local _, BrannFilterBag = ...
 
 -------------------------------------------------------------------------------
--- BrannBagFilter – FilterSettings v2
+-- BrannFilterBag – FilterSettings v2
 -- Einstellungs-Panel: Name, Icon, AND/OR/NOT Regeleditor
 -- Kein Reihefolge-Management (Drag & Drop reicht)
 -------------------------------------------------------------------------------
 
-BrannBagFilter.FilterSettings = {}
-local FS = BrannBagFilter.FilterSettings
+BrannFilterBag.FilterSettings = {}
+local FS = BrannFilterBag.FilterSettings
 FS.currentFrame = nil
 
 -------------------------------------------------------------------------------
@@ -37,12 +37,12 @@ local QUALITY_OPTIONS = {}
 for i = 0, 7 do
     table.insert(QUALITY_OPTIONS, {
         id    = tostring(i),
-        label = (BrannBagFilter.QualityLabels and BrannBagFilter.QualityLabels[i]) or tostring(i)
+        label = (BrannFilterBag.QualityLabels and BrannFilterBag.QualityLabels[i]) or tostring(i)
     })
 end
 
 local SLOT_OPTIONS = {}
-for k, v in pairs(BrannBagFilter.SlotLabels or {}) do
+for k, v in pairs(BrannFilterBag.SlotLabels or {}) do
     table.insert(SLOT_OPTIONS, { id = k, label = v })
 end
 table.sort(SLOT_OPTIONS, function(a, b) return a.label < b.label end)
@@ -376,7 +376,7 @@ function FS:OpenGlobal(parentVBagFrame)
     local PANEL_H = 500
     local LEFT_W  = 200
 
-    local panel = CreateFrame("Frame", "BrannBagFilter_GlobalSettings", UIParent, "BackdropTemplate")
+    local panel = CreateFrame("Frame", "BrannFilterBag_GlobalSettings", UIParent, "BackdropTemplate")
     panel:SetSize(PANEL_W, PANEL_H)
     panel:SetFrameStrata("DIALOG")
     panel:SetClampedToScreen(true)
@@ -410,12 +410,12 @@ function FS:OpenGlobal(parentVBagFrame)
     -- -------------------------------------------------------------------------
     -- Tab-Navigation
     -- -------------------------------------------------------------------------
-    local tabGeneral = CreateFrame("Button", "BrannBagFilter_TabGeneral", panel, "UIPanelButtonTemplate")
+    local tabGeneral = CreateFrame("Button", "BrannFilterBag_TabGeneral", panel, "UIPanelButtonTemplate")
     tabGeneral:SetPoint("TOPLEFT", panel, "BOTTOMLEFT", 15, -4)
     tabGeneral:SetSize(120, 26)
     tabGeneral:SetText("Einstellungen")
 
-    local tabFilters = CreateFrame("Button", "BrannBagFilter_TabFilters", panel, "UIPanelButtonTemplate")
+    local tabFilters = CreateFrame("Button", "BrannFilterBag_TabFilters", panel, "UIPanelButtonTemplate")
     tabFilters:SetPoint("LEFT", tabGeneral, "RIGHT", 4, 0)
     tabFilters:SetSize(120, 26)
     tabFilters:SetText("Filter")
@@ -456,7 +456,7 @@ function FS:OpenGlobal(parentVBagFrame)
     opacityLabel:SetPoint("TOPLEFT", contentGeneral, "TOPLEFT", 10, -10)
     opacityLabel:SetText("Transparenz Taschenfenster (Hintergrund)")
 
-    local opacitySlider = CreateFrame("Slider", "BrannBagFilter_OpacitySlider", contentGeneral, "OptionsSliderTemplate")
+    local opacitySlider = CreateFrame("Slider", "BrannFilterBag_OpacitySlider", contentGeneral, "OptionsSliderTemplate")
     opacitySlider:SetPoint("TOPLEFT", opacityLabel, "BOTTOMLEFT", 0, -15)
     opacitySlider:SetWidth(200)
     opacitySlider:SetMinMaxValues(0, 1)
@@ -466,32 +466,32 @@ function FS:OpenGlobal(parentVBagFrame)
     _G[opacitySlider:GetName().."High"]:SetText("100%")
 
     -- Initialisiere globale settings, falls nicht vorhanden
-    BrannBagFilter.db.global = BrannBagFilter.db.global or {
+    BrannFilterBag.db.global = BrannFilterBag.db.global or {
         opacity = 0.8,
         showSearch = true,
         showSonstige = true,
         showPerBagSlots = false,
     }
 
-    opacitySlider:SetValue(BrannBagFilter.db.global.opacity)
-    _G[opacitySlider:GetName().."Text"]:SetText(string.format("%.0f%%", BrannBagFilter.db.global.opacity * 100))
+    opacitySlider:SetValue(BrannFilterBag.db.global.opacity)
+    _G[opacitySlider:GetName().."Text"]:SetText(string.format("%.0f%%", BrannFilterBag.db.global.opacity * 100))
 
     opacitySlider:SetScript("OnValueChanged", function(self, value)
-        BrannBagFilter.db.global.opacity = value
+        BrannFilterBag.db.global.opacity = value
         _G[self:GetName().."Text"]:SetText(string.format("%.0f%%", value * 100))
-        if BrannBagFilter.UI then
-            if BrannBagFilter.UI.masterFrame then
-                if BrannBagFilter.UI.masterFrame.Bg then BrannBagFilter.UI.masterFrame.Bg:SetAlpha(value) end
-                if BrannBagFilter.UI.masterFrame.Inset then
-                    for _, region in pairs({BrannBagFilter.UI.masterFrame.Inset:GetRegions()}) do
+        if BrannFilterBag.UI then
+            if BrannFilterBag.UI.masterFrame then
+                if BrannFilterBag.UI.masterFrame.Bg then BrannFilterBag.UI.masterFrame.Bg:SetAlpha(value) end
+                if BrannFilterBag.UI.masterFrame.Inset then
+                    for _, region in pairs({BrannFilterBag.UI.masterFrame.Inset:GetRegions()}) do
                         if region and region.SetAlpha then region:SetAlpha(value) end
                     end
                 end
             end
-            if BrannBagFilter.UI.reagentFrame then
-                if BrannBagFilter.UI.reagentFrame.Bg then BrannBagFilter.UI.reagentFrame.Bg:SetAlpha(value) end
-                if BrannBagFilter.UI.reagentFrame.Inset then
-                    for _, region in pairs({BrannBagFilter.UI.reagentFrame.Inset:GetRegions()}) do
+            if BrannFilterBag.UI.reagentFrame then
+                if BrannFilterBag.UI.reagentFrame.Bg then BrannFilterBag.UI.reagentFrame.Bg:SetAlpha(value) end
+                if BrannFilterBag.UI.reagentFrame.Inset then
+                    for _, region in pairs({BrannFilterBag.UI.reagentFrame.Inset:GetRegions()}) do
                         if region and region.SetAlpha then region:SetAlpha(value) end
                     end
                 end
@@ -500,54 +500,54 @@ function FS:OpenGlobal(parentVBagFrame)
     end)
 
     -- Suchleiste anzeigen (Globale Option)
-    local searchCB = CreateFrame("CheckButton", "BrannBagFilter_GlobalSearchCB", contentGeneral, "UICheckButtonTemplate")
+    local searchCB = CreateFrame("CheckButton", "BrannFilterBag_GlobalSearchCB", contentGeneral, "UICheckButtonTemplate")
     searchCB:SetPoint("TOPLEFT", opacitySlider, "BOTTOMLEFT", 0, -20)
     searchCB:SetSize(24, 24)
     if searchCB.Text then
         searchCB.Text:SetText("Suchleiste im Taschenfenster anzeigen")
         searchCB.Text:SetFontObject("GameFontNormal")
     end
-    searchCB:SetChecked(BrannBagFilter.db.global.showSearch)
+    searchCB:SetChecked(BrannFilterBag.db.global.showSearch)
 
     searchCB:SetScript("OnClick", function(self)
-        BrannBagFilter.db.global.showSearch = self:GetChecked()
-        if BrannBagFilter.UI and BrannBagFilter.UI.masterFrame then
-            BrannBagFilter.UI.masterFrame.searchBox:SetShown(BrannBagFilter.db.global.showSearch)
-            BrannBagFilter.UI:RefreshMasterBag()
+        BrannFilterBag.db.global.showSearch = self:GetChecked()
+        if BrannFilterBag.UI and BrannFilterBag.UI.masterFrame then
+            BrannFilterBag.UI.masterFrame.searchBox:SetShown(BrannFilterBag.db.global.showSearch)
+            BrannFilterBag.UI:RefreshMasterBag()
         end
     end)
 
     -- "Sonstige" Gruppe anzeigen (Globale Option)
-    local sonstigeCB = CreateFrame("CheckButton", "BrannBagFilter_GlobalSonstigeCB", contentGeneral, "UICheckButtonTemplate")
+    local sonstigeCB = CreateFrame("CheckButton", "BrannFilterBag_GlobalSonstigeCB", contentGeneral, "UICheckButtonTemplate")
     sonstigeCB:SetPoint("TOPLEFT", searchCB, "BOTTOMLEFT", 0, -10)
     sonstigeCB:SetSize(24, 24)
     if sonstigeCB.Text then
         sonstigeCB.Text:SetText("Automatische 'Sonstige'-Gruppe anzeigen")
         sonstigeCB.Text:SetFontObject("GameFontNormal")
     end
-    sonstigeCB:SetChecked(BrannBagFilter.db.global.showSonstige)
+    sonstigeCB:SetChecked(BrannFilterBag.db.global.showSonstige)
 
     sonstigeCB:SetScript("OnClick", function(self)
-        BrannBagFilter.db.global.showSonstige = self:GetChecked()
-        if BrannBagFilter.UI then
-            BrannBagFilter.UI:RefreshMasterBag()
+        BrannFilterBag.db.global.showSonstige = self:GetChecked()
+        if BrannFilterBag.UI then
+            BrannFilterBag.UI:RefreshMasterBag()
         end
     end)
 
     -- Freie Plätze je Tasche anzeigen (Globale Option)
-    local perBagCB = CreateFrame("CheckButton", "BrannBagFilter_GlobalPerBagCB", contentGeneral, "UICheckButtonTemplate")
+    local perBagCB = CreateFrame("CheckButton", "BrannFilterBag_GlobalPerBagCB", contentGeneral, "UICheckButtonTemplate")
     perBagCB:SetPoint("TOPLEFT", sonstigeCB, "BOTTOMLEFT", 0, -10)
     perBagCB:SetSize(24, 24)
     if perBagCB.Text then
         perBagCB.Text:SetText("Freie Plätze je Tasche anzeigen (Rechtsklick: Zuordnung)")
         perBagCB.Text:SetFontObject("GameFontNormal")
     end
-    perBagCB:SetChecked(BrannBagFilter.db.global.showPerBagSlots or false)
+    perBagCB:SetChecked(BrannFilterBag.db.global.showPerBagSlots or false)
 
     perBagCB:SetScript("OnClick", function(self)
-        BrannBagFilter.db.global.showPerBagSlots = self:GetChecked()
-        if BrannBagFilter.UI then
-            BrannBagFilter.UI:RefreshMasterBag()
+        BrannFilterBag.db.global.showPerBagSlots = self:GetChecked()
+        if BrannFilterBag.UI then
+            BrannFilterBag.UI:RefreshMasterBag()
         end
     end)
 
@@ -614,7 +614,7 @@ function FS:OpenGlobal(parentVBagFrame)
     nameEB:SetPoint("LEFT", nameLabel, "RIGHT", 8, 0)
     nameEB:SetAutoFocus(false)
 
-    local dimCB = CreateFrame("CheckButton", "BrannBagFilter_Settings_GlobalDimCB", editorContainer, "UICheckButtonTemplate")
+    local dimCB = CreateFrame("CheckButton", "BrannFilterBag_Settings_GlobalDimCB", editorContainer, "UICheckButtonTemplate")
     dimCB:SetPoint("TOPLEFT", nameLabel, "BOTTOMLEFT", -4, -6)
     dimCB:SetSize(24, 24)
     if dimCB.Text then
@@ -628,7 +628,7 @@ function FS:OpenGlobal(parentVBagFrame)
     end)
     dimCB:SetScript("OnLeave", GameTooltip_Hide)
 
-    local showEmptyCB = CreateFrame("CheckButton", "BrannBagFilter_Settings_GlobalShowEmptyCB", editorContainer, "UICheckButtonTemplate")
+    local showEmptyCB = CreateFrame("CheckButton", "BrannFilterBag_Settings_GlobalShowEmptyCB", editorContainer, "UICheckButtonTemplate")
     showEmptyCB:SetPoint("LEFT", dimCB, "RIGHT", 140, 0)
     showEmptyCB:SetSize(24, 24)
     if showEmptyCB.Text then
@@ -706,10 +706,10 @@ function FS:OpenGlobal(parentVBagFrame)
                 function(ri)
                     table.remove(rules, ri)
                     RefreshRuleList()
-                    if BrannBagFilter.UI then BrannBagFilter.UI:RefreshMasterBag() end
+                    if BrannFilterBag.UI then BrannFilterBag.UI:RefreshMasterBag() end
                 end,
                 function()
-                    if BrannBagFilter.UI then BrannBagFilter.UI:RefreshMasterBag() end
+                    if BrannFilterBag.UI then BrannFilterBag.UI:RefreshMasterBag() end
                 end
             )
             table.insert(ruleLines, line)
@@ -762,7 +762,7 @@ function FS:OpenGlobal(parentVBagFrame)
         wipe(filterButtons)
 
         local y = 0
-        local vBags = FS.isEditingReagents and BrannBagFilter.db.reagentBags or BrannBagFilter.db.virtualBags
+        local vBags = FS.isEditingReagents and BrannFilterBag.db.reagentBags or BrannFilterBag.db.virtualBags
         for i, bd in ipairs(vBags) do
             local btn = CreateFrame("Button", nil, listContent)
             btn:SetSize(LEFT_W - 30, 24)
@@ -801,7 +801,7 @@ function FS:OpenGlobal(parentVBagFrame)
                     vBags[i] = vBags[i-1]
                     vBags[i-1] = temp
                     RefreshFilterList()
-                    if BrannBagFilter.UI then BrannBagFilter.UI:RefreshMasterBag() end
+                    if BrannFilterBag.UI then BrannFilterBag.UI:RefreshMasterBag() end
                 end
             end)
 
@@ -818,7 +818,7 @@ function FS:OpenGlobal(parentVBagFrame)
                     vBags[i] = vBags[i+1]
                     vBags[i+1] = temp
                     RefreshFilterList()
-                    if BrannBagFilter.UI then BrannBagFilter.UI:RefreshMasterBag() end
+                    if BrannFilterBag.UI then BrannFilterBag.UI:RefreshMasterBag() end
                 end
             end)
 
@@ -859,7 +859,7 @@ function FS:OpenGlobal(parentVBagFrame)
                     local item = table.remove(vBags, self.dragStartIdx)
                     table.insert(vBags, targetIdx, item)
                     RefreshFilterList()
-                    if BrannBagFilter.UI then BrannBagFilter.UI:RefreshMasterBag() end
+                    if BrannFilterBag.UI then BrannFilterBag.UI:RefreshMasterBag() end
                 end
             end)
 
@@ -881,7 +881,7 @@ function FS:OpenGlobal(parentVBagFrame)
 
     -- Callbacks
     addBagBtn:SetScript("OnClick", function()
-        local id = BrannBagFilter:NewID()
+        local id = BrannFilterBag:NewID()
         local bd = {
             id      = id,
             name    = "Filter " .. id,
@@ -892,16 +892,16 @@ function FS:OpenGlobal(parentVBagFrame)
         }
         
         if FS.isEditingReagents then
-            table.insert(BrannBagFilter.db.reagentBags, bd)
-            BrannBagFilter.db.masterBag.reagentOpen = true
+            table.insert(BrannFilterBag.db.reagentBags, bd)
+            BrannFilterBag.db.masterBag.reagentOpen = true
         else
-            table.insert(BrannBagFilter.db.virtualBags, bd)
-            BrannBagFilter.db.masterBag.visible = true
+            table.insert(BrannFilterBag.db.virtualBags, bd)
+            BrannFilterBag.db.masterBag.visible = true
         end
         
-        if BrannBagFilter.UI then
-            BrannBagFilter.UI.masterFrame:Show()
-            BrannBagFilter.UI:RefreshMasterBag()
+        if BrannFilterBag.UI then
+            BrannFilterBag.UI.masterFrame:Show()
+            BrannFilterBag.UI:RefreshMasterBag()
         end
         RefreshFilterList()
         SelectFilter(bd)
@@ -909,14 +909,14 @@ function FS:OpenGlobal(parentVBagFrame)
 
     deleteFilterBtn:SetScript("OnClick", function()
         if not activeBagData then return end
-        local vBags = FS.isEditingReagents and BrannBagFilter.db.reagentBags or BrannBagFilter.db.virtualBags
+        local vBags = FS.isEditingReagents and BrannFilterBag.db.reagentBags or BrannFilterBag.db.virtualBags
         for i, bd in ipairs(vBags) do
             if bd == activeBagData then
                 table.remove(vBags, i)
                 break
             end
         end
-        if BrannBagFilter.UI then BrannBagFilter.UI:RefreshMasterBag() end
+        if BrannFilterBag.UI then BrannFilterBag.UI:RefreshMasterBag() end
         RefreshFilterList()
     end)
 
@@ -925,7 +925,7 @@ function FS:OpenGlobal(parentVBagFrame)
         if activeBagData then
             activeBagData.name = self:GetText()
             RefreshFilterList() -- updates left pane button text
-            if BrannBagFilter.UI then BrannBagFilter.UI:RefreshMasterBag() end
+            if BrannFilterBag.UI then BrannFilterBag.UI:RefreshMasterBag() end
         end
     end)
     nameEB:SetScript("OnEscapePressed", function(self)
@@ -936,14 +936,14 @@ function FS:OpenGlobal(parentVBagFrame)
     dimCB:SetScript("OnClick", function(self)
         if activeBagData then
             activeBagData.exclusiveOnly = self:GetChecked()
-            if BrannBagFilter.UI then BrannBagFilter.UI:RefreshMasterBag() end
+            if BrannFilterBag.UI then BrannFilterBag.UI:RefreshMasterBag() end
         end
     end)
 
     showEmptyCB:SetScript("OnClick", function(self)
         if activeBagData then
             activeBagData.showEmpty = self:GetChecked()
-            if BrannBagFilter.UI then BrannBagFilter.UI:RefreshMasterBag() end
+            if BrannFilterBag.UI then BrannFilterBag.UI:RefreshMasterBag() end
         end
     end)
 
@@ -951,14 +951,14 @@ function FS:OpenGlobal(parentVBagFrame)
         if not activeBagData then return end
         table.insert(activeBagData.rules, { field = "name", op = "AND", negate = false, value = "" })
         RefreshRuleList()
-        if BrannBagFilter.UI then BrannBagFilter.UI:RefreshMasterBag() end
+        if BrannFilterBag.UI then BrannFilterBag.UI:RefreshMasterBag() end
     end)
 
     clearRulesBtn:SetScript("OnClick", function()
         if not activeBagData then return end
         wipe(activeBagData.rules)
         RefreshRuleList()
-        if BrannBagFilter.UI then BrannBagFilter.UI:RefreshMasterBag() end
+        if BrannFilterBag.UI then BrannFilterBag.UI:RefreshMasterBag() end
     end)
 
     tabMainBag:SetScript("OnClick", function()

@@ -1,7 +1,7 @@
-local _, BrannBagFilter = ...
+﻿local _, BrannFilterBag = ...
 
 -------------------------------------------------------------------------------
--- BrannBagFilter – UI v3
+-- BrannFilterBag – UI v3
 -- Fixes:
 --   • UseContainerItem ADDON_ACTION_FORBIDDEN → HookScript statt SetScript
 --   • Header overhaul: full-width title bar, no quicksearch
@@ -10,8 +10,8 @@ local _, BrannBagFilter = ...
 --   • Icon-Picker mit allen Macro-Icons (scrollbar)
 -------------------------------------------------------------------------------
 
-BrannBagFilter.UI = {}
-local UI = BrannBagFilter.UI
+BrannFilterBag.UI = {}
+local UI = BrannFilterBag.UI
 
 local SLOT_SIZE    = 37
 local SLOT_PAD     = 4
@@ -32,8 +32,8 @@ end
 function UI:Initialize()
     self:HookBagVisibility()
     
-    if not BrannBagFilter.db.masterBag then
-        BrannBagFilter.db.masterBag = { cols = COLS_DEFAULT, visible = true }
+    if not BrannFilterBag.db.masterBag then
+        BrannFilterBag.db.masterBag = { cols = COLS_DEFAULT, visible = true }
     end
     
     self:CreateMasterFrame()
@@ -54,7 +54,7 @@ function UI:Initialize()
     end)
 end
 
-local NukeFrame = CreateFrame("Frame", "BrannBagFilterSneakyFrame")
+local NukeFrame = CreateFrame("Frame", "BrannFilterBagSneakyFrame")
 NukeFrame:Hide()
 
 function UI:HookBagVisibility()
@@ -77,7 +77,7 @@ function UI:HookBagVisibility()
     -- übernehmen wir lieber direkt ToggleAllBags/OpenAllBags wenn möglich, 
     -- aber belassen es mal beim OnShow hook für Kompatibilität, falls es doch aufgerufen wird:
     ContainerFrameCombinedBags:HookScript("OnShow", function(self)
-        if BrannBagFilter.db.masterBag.visible ~= false and self.masterFrame then 
+        if BrannFilterBag.db.masterBag.visible ~= false and self.masterFrame then 
             self.masterFrame:Show()
             self:RefreshMasterBag()
         end
@@ -89,8 +89,8 @@ function UI:HookBagVisibility()
     -- =========================================================================
     -- GLOBALE TOGGLE-FUNKTION (aufgerufen von Bindings.xml)
     -- =========================================================================
-    function BrannBagFilter_ToggleBags()
-        local ui = BrannBagFilter.UI
+    function BrannFilterBag_ToggleBags()
+        local ui = BrannFilterBag.UI
         if not ui then return end
         if not ui.masterFrame then return end
         
@@ -105,9 +105,9 @@ function UI:HookBagVisibility()
     -- =========================================================================
     -- KEYBINDING OVERRIDES (wie BetterBags: SetOverrideBinding)
     -- Wir führen ALLE natürlichen Bag-Keybinds auf unser eigenes
-    -- BRANNBAGFILTER_TOGGLEBAGS Binding um.
+    -- BRANNFILTERBAG_TOGGLEBAGS Binding um.
     -- =========================================================================
-    local bindFrame = CreateFrame("Frame", "BrannBagFilter_BindingFrame")
+    local bindFrame = CreateFrame("Frame", "BrannFilterBag_BindingFrame")
     bindFrame:RegisterEvent("PLAYER_LOGIN")
     bindFrame:RegisterEvent("UPDATE_BINDINGS")
 
@@ -132,12 +132,12 @@ function UI:HookBagVisibility()
         for _, binding in ipairs(bindings) do
             local key1, key2 = GetBindingKey(binding)
             if key1 then
-                SetOverrideBinding(bindFrame, true, key1, "BRANNBAGFILTER_TOGGLEBAGS")
-                print("|cff00ff00[BBF DEBUG]|r Binding "..binding.." -> Key1: "..key1.." -> BRANNBAGFILTER_TOGGLEBAGS")
+                SetOverrideBinding(bindFrame, true, key1, "BRANNFILTERBAG_TOGGLEBAGS")
+                print("|cff00ff00[BBF DEBUG]|r Binding "..binding.." -> Key1: "..key1.." -> BRANNFILTERBAG_TOGGLEBAGS")
                 boundCount = boundCount + 1
             end
             if key2 then
-                SetOverrideBinding(bindFrame, true, key2, "BRANNBAGFILTER_TOGGLEBAGS")
+                SetOverrideBinding(bindFrame, true, key2, "BRANNFILTERBAG_TOGGLEBAGS")
                 boundCount = boundCount + 1
             end
         end
@@ -149,20 +149,20 @@ function UI:HookBagVisibility()
     -- HOOK: ToggleAllBags / CloseAllBags (Sicherheit für andere Auslöser)
     -- =========================================================================
     hooksecurefunc("ToggleAllBags", function()
-        BrannBagFilter_ToggleBags()
+        BrannFilterBag_ToggleBags()
     end)
 
     hooksecurefunc("OpenAllBags", function()
-        local ui = BrannBagFilter.UI
+        local ui = BrannFilterBag.UI
         if not ui or not ui.masterFrame then return end
-        if BrannBagFilter.db.masterBag.visible ~= false then
+        if BrannFilterBag.db.masterBag.visible ~= false then
             ui.masterFrame:Show()
             ui:RefreshMasterBag()
         end
     end)
 
     hooksecurefunc("CloseAllBags", function()
-        local ui = BrannBagFilter.UI
+        local ui = BrannFilterBag.UI
         if ui and ui.masterFrame then ui.masterFrame:Hide() end
     end)
 
@@ -183,7 +183,7 @@ function UI:HookBagVisibility()
     for _, btn in pairs(bagButtons) do
         if btn then
             btn:HookScript("OnClick", function()
-                BrannBagFilter_ToggleBags()
+                BrannFilterBag_ToggleBags()
             end)
         end
     end
@@ -206,12 +206,12 @@ end
 function UI:CreateMasterFrame()
     if self.masterFrame then return end
 
-    local db = BrannBagFilter.db.masterBag
+    local db = BrannFilterBag.db.masterBag
     local cols = db.cols or COLS_DEFAULT
     local frameW = CalcFrameWidth(cols)
 
     -- Verwende das native WoW Template für Menüfenster
-    local frame = CreateFrame("Frame", "BrannBagFilter_MasterBag", UIParent, "ButtonFrameTemplate")
+    local frame = CreateFrame("Frame", "BrannFilterBag_MasterBag", UIParent, "ButtonFrameTemplate")
     frame:SetFrameStrata("HIGH")
     frame:SetClampedToScreen(true)
     frame:SetMovable(true)
@@ -235,7 +235,7 @@ function UI:CreateMasterFrame()
     end
 
     -- Native WoW Header befüllen
-    frame:SetTitle("BrannBagFilter")
+    frame:SetTitle("Brann FilterBag")
     if frame.SetPortraitToAsset then
         frame:SetPortraitToAsset("Interface\\Icons\\INV_Misc_Bag_07")
     end
@@ -318,7 +318,7 @@ function UI:CreateMasterFrame()
         end)
         portraitBtn:SetScript("OnEnter", function(btn)
             GameTooltip:SetOwner(btn, "ANCHOR_RIGHT")
-            GameTooltip:SetText("BrannBagFilter", 1, 1, 1)
+            GameTooltip:SetText("Brann FilterBag", 1, 1, 1)
             GameTooltip:AddLine("Rechtsklick: Taschenzuordnung", 0.5, 0.8, 1)
             GameTooltip:Show()
         end)
@@ -421,7 +421,7 @@ function UI:CreateMasterFrame()
     gearBtn:SetFrameLevel(frame.CloseButton and (frame.CloseButton:GetFrameLevel() + 1) or (frame:GetFrameLevel() + 5))
     
     gearBtn:SetScript("OnClick", function()
-        BrannBagFilter.FilterSettings:OpenGlobal(self.masterFrame)
+        BrannFilterBag.FilterSettings:OpenGlobal(self.masterFrame)
     end)
 
     gearBtn:SetScript("OnEnter", function(self)
@@ -464,7 +464,7 @@ function UI:CreateMasterFrame()
     sortBtn:SetScript("OnLeave", GameTooltip_Hide)
 
     -- Suchleiste
-    local searchBox = CreateFrame("EditBox", "BrannBagFilter_SearchBox", frame, "BagSearchBoxTemplate")
+    local searchBox = CreateFrame("EditBox", "BrannFilterBag_SearchBox", frame, "BagSearchBoxTemplate")
     searchBox:SetSize(260, 20)
     searchBox:SetPoint("TOP", frame, "TOP", 0, -32)
     searchBox:SetScript("OnTextChanged", function(self)
@@ -474,8 +474,8 @@ function UI:CreateMasterFrame()
         UI:RefreshMasterBag()
     end)
     frame.searchBox = searchBox
-    if BrannBagFilter.db.global then
-        frame.searchBox:SetShown(BrannBagFilter.db.global.showSearch ~= false)
+    if BrannFilterBag.db.global then
+        frame.searchBox:SetShown(BrannFilterBag.db.global.showSearch ~= false)
     end
 
     -- Versuch, Money/Token Frame vom Combined Backpack zu klauen
@@ -531,8 +531,8 @@ function UI:CreateMasterFrame()
     self.itemButtons = self.itemButtons or {}
     self.itemPoolCounter = 1
     
-    if BrannBagFilter.db.global then
-        local alpha = BrannBagFilter.db.global.opacity or 0.8
+    if BrannFilterBag.db.global then
+        local alpha = BrannFilterBag.db.global.opacity or 0.8
         if frame.Bg then frame.Bg:SetAlpha(alpha) end
         if frame.Inset then
             local insetBg = frame.Inset:GetRegions()
@@ -660,7 +660,7 @@ function UI:GetOrCreateSectionHeader(index, data)
 
         -- Determine which bag list we are working with
         local isReagent = self.sectionIndex and self.sectionIndex >= 1000
-        local targetDbArray = isReagent and BrannBagFilter.db.reagentBags or BrannBagFilter.db.virtualBags
+        local targetDbArray = isReagent and BrannFilterBag.db.reagentBags or BrannFilterBag.db.virtualBags
 
         for _, otherHdr in pairs(UI.sectionHeaders) do
             if otherHdr:IsShown() and otherHdr ~= self then
@@ -784,11 +784,11 @@ end
 function UI:CreateReagentFrame()
     if self.reagentFrame then return end
 
-    local db = BrannBagFilter.db.masterBag
+    local db = BrannFilterBag.db.masterBag
     local cols = db.cols or COLS_DEFAULT
     local frameW = CalcFrameWidth(cols)
 
-    local frame = CreateFrame("Frame", "BrannBagFilter_ReagentBag", self.masterFrame, "ButtonFrameTemplate")
+    local frame = CreateFrame("Frame", "BrannFilterBag_ReagentBag", self.masterFrame, "ButtonFrameTemplate")
     frame:SetFrameStrata("HIGH")
     frame:SetPoint("TOPRIGHT", self.masterFrame, "TOPLEFT", -2, 0)
     frame:SetWidth(frameW)
@@ -843,7 +843,7 @@ function UI:CreateReagentFrame()
     gearBtn:SetFrameLevel(frame.CloseButton and (frame.CloseButton:GetFrameLevel() + 1) or (frame:GetFrameLevel() + 5))
     
     gearBtn:SetScript("OnClick", function()
-        BrannBagFilter.FilterSettings:OpenGlobal(self.reagentFrame, true)
+        BrannFilterBag.FilterSettings:OpenGlobal(self.reagentFrame, true)
     end)
 
     gearBtn:SetScript("OnEnter", function(self)
@@ -866,7 +866,7 @@ function UI:RefreshMasterBag()
     self.itemButtons = self.itemButtons or {}
     self.sectionHeaders = self.sectionHeaders or {}
 
-    local db = BrannBagFilter.db.masterBag
+    local db = BrannFilterBag.db.masterBag
     local cols = db.cols or COLS_DEFAULT
     local frameW = CalcFrameWidth(cols)
     self.masterFrame:SetWidth(frameW)
@@ -922,7 +922,7 @@ function UI:RefreshMasterBag()
         end
     end
     local totalFreeMaster = #emptySlotsMaster
-    local showPerBag = BrannBagFilter.db.global and BrannBagFilter.db.global.showPerBagSlots
+    local showPerBag = BrannFilterBag.db.global and BrannFilterBag.db.global.showPerBagSlots
 
     local sectionIndex = 1
 
@@ -1227,9 +1227,9 @@ function UI:RefreshMasterBag()
     -- Erste Runde: Alle Filter auswerten, exclusiveOnly-Keys sammeln
     local exclusiveKeys = {} -- key -> true, wenn mindestens eine exclusiveOnly-Gruppe das Item matched
     local filterResults = {} -- { bagData, items (raw) }
-    for i, bagData in ipairs(BrannBagFilter.db.virtualBags) do
+    for i, bagData in ipairs(BrannFilterBag.db.virtualBags) do
         if bagData.visible ~= false then
-            local itemsRaw = BrannBagFilter.Filtering:GetMatchingItems(bagData.rules, matchedItemsLookup)
+            local itemsRaw = BrannFilterBag.Filtering:GetMatchingItems(bagData.rules, matchedItemsLookup)
             local items = {}
             for _, item in ipairs(itemsRaw) do
                 local key = item.bag .. "_" .. item.slot
@@ -1266,7 +1266,7 @@ function UI:RefreshMasterBag()
     
     -- Sonstige (Unmatched Items) erfassen und als letzte Section rendern
     local sonstigeItems = {}
-    if not BrannBagFilter.db.global or BrannBagFilter.db.global.showSonstige ~= false then
+    if not BrannFilterBag.db.global or BrannFilterBag.db.global.showSonstige ~= false then
         for bag = 0, 4 do
             local numSlots = C_Container.GetContainerNumSlots(bag)
             for slot = 1, numSlots do
@@ -1614,9 +1614,9 @@ function UI:RefreshMasterBag()
             rSection({ id = "free_space_reagent", name = "Freie Plätze", visible = true, showEmpty = false }, { freeItem }, nil)
         end
 
-        BrannBagFilter.db.reagentBags = BrannBagFilter.db.reagentBags or {}
+        BrannFilterBag.db.reagentBags = BrannFilterBag.db.reagentBags or {}
         local rMatched = {}
-        for i, bagData in ipairs(BrannBagFilter.db.reagentBags) do
+        for i, bagData in ipairs(BrannFilterBag.db.reagentBags) do
             if bagData.visible ~= false then
                 -- Override bag limit inside GetMatchingItems logic temporarily for reagent bag (Enum.BagIndex.ReagentBag == 5)
                 local itemsRaw = {}
@@ -1630,7 +1630,7 @@ function UI:RefreshMasterBag()
                                 bag = 5, slot = slot, link = info.hyperlink, texture = info.iconFileID, stackCount = info.stackCount or 1, isLocked = info.isLocked, quality = itemQuality or info.quality or 0, equipLoc = equipLoc, name = itemName, itemType = itemType, itemSubType = itemSubType, classID = classID, subClassID = subClassID,
                                 _matchedSet = rMatched,
                             }
-                            if BrannBagFilter.Filtering:EvaluateRules(bagData.rules, itemObj, {}) then
+                            if BrannFilterBag.Filtering:EvaluateRules(bagData.rules, itemObj, {}) then
                                 table.insert(itemsRaw, itemObj)
                             end
                         end
@@ -1701,7 +1701,7 @@ function UI:RefreshMasterBag()
             rGearBtn:SetFrameLevel(self.reagentFrame.CloseButton and (self.reagentFrame.CloseButton:GetFrameLevel() + 1) or (self.reagentFrame:GetFrameLevel() + 5))
             
             rGearBtn:SetScript("OnClick", function()
-                BrannBagFilter.FilterSettings:OpenGlobal(self.reagentFrame, true)
+                BrannFilterBag.FilterSettings:OpenGlobal(self.reagentFrame, true)
             end)
 
             rGearBtn:SetScript("OnEnter", function(self)
@@ -1903,7 +1903,7 @@ function UI:ShowIconPicker(anchor, data, callback)
     local PH_VIS = VISIBLE_ROWS * (PBTN + PPAD)
     local SEARCH_H = 28
 
-    local picker = CreateFrame("Frame", "BrannBagFilter_IconPicker", UIParent, "BackdropTemplate")
+    local picker = CreateFrame("Frame", "BrannFilterBag_IconPicker", UIParent, "BackdropTemplate")
     picker:SetSize(PW, PH_VIS + SEARCH_H + 50)
     picker:SetFrameStrata("DIALOG")
     picker:SetClampedToScreen(true)
@@ -1949,7 +1949,7 @@ function UI:ShowIconPicker(anchor, data, callback)
     local gridTop = -(26 + SEARCH_H)
 
     -- Faux ScrollFrame
-    local scrollFrame = CreateFrame("ScrollFrame", "BrannBagFilter_IconScroll", picker, "FauxScrollFrameTemplate")
+    local scrollFrame = CreateFrame("ScrollFrame", "BrannFilterBag_IconScroll", picker, "FauxScrollFrameTemplate")
     scrollFrame:SetPoint("TOPLEFT", picker, "TOPLEFT", 10, gridTop)
     scrollFrame:SetPoint("BOTTOMRIGHT", picker, "BOTTOMRIGHT", -32, 10)
 
@@ -2082,8 +2082,8 @@ end
 -- SavedVars wiederherstellen
 -------------------------------------------------------------------------------
 function UI:RestoreVirtualBags()
-    if not BrannBagFilter.db or not BrannBagFilter.db.virtualBags then return end
-    for _, bagData in ipairs(BrannBagFilter.db.virtualBags) do
+    if not BrannFilterBag.db or not BrannFilterBag.db.virtualBags then return end
+    for _, bagData in ipairs(BrannFilterBag.db.virtualBags) do
         self:CreateVirtualBagFrame(bagData)
     end
     self:LayoutVirtualBags()
